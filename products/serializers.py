@@ -9,7 +9,8 @@ class ProductScoreSerializer(serializers.ModelSerializer):
         fields = ['product', 'score']
 
     def validate(self, attrs):
-        if ProductScore.objects.filter(customer_id=1, product=attrs['product']).exists():
+        customer = self.context["request"].user
+        if ProductScore.objects.filter(customer=customer, product=attrs['product']).exists():
             raise serializers.ValidationError(
                 {'error': 'product score for the user exists'})
 
